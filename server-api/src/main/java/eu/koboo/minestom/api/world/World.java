@@ -3,6 +3,7 @@ package eu.koboo.minestom.api.world;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import net.minestom.server.coordinate.Pos;
+import net.minestom.server.event.player.PlayerSpawnEvent;
 import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.world.DimensionType;
 import org.simpleyaml.configuration.file.YamlFile;

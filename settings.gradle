@@ -1,3 +1,5 @@
 rootProject.name = 'TemplateStom'
 include(':server-api')
 include(':server-app')
+include 'example-module'
+

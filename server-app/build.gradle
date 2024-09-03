@@ -21,6 +21,7 @@ dependencies {
 
     implementation "org.tinylog:slf4j-tinylog:${tinylogVersion}"
     implementation "org.tinylog:tinylog-impl:${tinylogVersion}"
+
     implementation "org.fusesource.jansi:jansi:${jansiVersion}"
     implementation "org.jline:jline:${jlineVersion}"
 

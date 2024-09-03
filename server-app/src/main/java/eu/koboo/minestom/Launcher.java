@@ -14,5 +14,4 @@ public class Launcher {
             System.exit(1);
         }
     }
-
 }

@@ -1,6 +1,7 @@
 package eu.koboo.minestom.server;
 
 import eu.koboo.minestom.api.config.ServerConfig;
+import eu.koboo.minestom.api.module.ModuleManager;
 import eu.koboo.minestom.api.server.Server;
 import eu.koboo.minestom.api.world.World;
 import eu.koboo.minestom.api.world.dimension.Dimension;
@@ -10,8 +11,10 @@ import eu.koboo.minestom.commands.CommandVersion;
 import eu.koboo.minestom.commands.CommandWorld;
 import eu.koboo.minestom.config.ConfigLoader;
 import eu.koboo.minestom.console.Console;
+import eu.koboo.minestom.module.ModuleManagerImpl;
 import eu.koboo.minestom.server.world.WorldManagerImpl;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import net.minestom.server.MinecraftServer;
@@ -46,6 +49,7 @@ public class ServerImpl extends Server {
     ServerConfig serverConfig;
 
     WorldManagerImpl worldManager;
+    ModuleManagerImpl moduleManager;
 
     @Getter
     Console console;
@@ -67,13 +71,13 @@ public class ServerImpl extends Server {
         Logger.info("Initializing console..");
         console = new Console();
 
-        Logger.info("Initializing world manager..");
-        worldManager = new WorldManagerImpl();
-
-
-
         Logger.info("Initializing server..");
+        worldManager = new WorldManagerImpl();
+        moduleManager = new ModuleManagerImpl();
+
         MinecraftServer minecraftServer = MinecraftServer.init();
+
+        moduleManager.enableAllModules();
 
         MinecraftServer.getExceptionManager()
                 .setExceptionHandler(exc -> Logger.error("An unexpected error occurred! ", exc));
@@ -176,6 +180,11 @@ public class ServerImpl extends Server {
     @Override
     public World getDefaulWorld() {
         return worldManager.createWorld(WorldManagerImpl.DEFAULT_WORLD_NAME, Dimension.OVERWORLD);
+    }
+
+    @Override
+    public @NonNull ModuleManager getModuleManager() {
+        return moduleManager;
     }
 
     private void setupDefaultWorld() {
