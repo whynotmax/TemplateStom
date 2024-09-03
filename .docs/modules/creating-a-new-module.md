@@ -21,8 +21,8 @@ import eu.koboo.minestom.api.module.annotation.dependencies.ModuleDependency;
         name = "MessageModule", 
         version = "1.0.0",
         description = "A module that displays a message on the screen",
-        author = "Your Name",
-        dependencies = {
+        authors = {"Your Name"},
+        moduleDependencies = {
                 @ModuleDependency(
                         name = "TestModule"
                 )
@@ -98,6 +98,7 @@ Congratulations! You have created a new module for the project. You can now add 
 
 ## Next Steps
 
+- [Registering listeners with reflections](registering-listeners-with-reflections.md)
 - [Working with packets](working-with-packets.md)
 - [Creating a command](creating-a-command.md)
 - [Creating a GUI](creating-a-gui.md)
