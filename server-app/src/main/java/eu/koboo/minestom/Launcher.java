@@ -3,6 +3,9 @@ package eu.koboo.minestom;
 import eu.koboo.minestom.server.ServerImpl;
 import org.fusesource.jansi.AnsiConsole;
 
+import java.util.EventListener;
+import java.util.function.Consumer;
+
 public class Launcher {
 
     public static void main(String[] args) {
@@ -14,5 +17,4 @@ public class Launcher {
             System.exit(1);
         }
     }
-
 }
