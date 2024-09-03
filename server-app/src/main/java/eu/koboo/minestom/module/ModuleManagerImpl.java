@@ -95,7 +95,7 @@ public class ModuleManagerImpl implements ModuleManager {
     @Override
     public void enableAllModules() {
         //TODO: Check module folder and load all modules
-        //TODO: Have fun with reflection and class loading! <3
+        //      Have fun with reflection and class loading! <3
     }
 
     @Override
