@@ -55,6 +55,7 @@ public class ModuleManagerImpl implements ModuleManager {
             if (ServerImpl.DEBUG) Logger.error("No modules found; maybe you should create some? :)");
         }
         Logger.info("Found " + filesInModuleFolder + " module(s). Thank you for choosing us!");
+
     }
 
     @Override
@@ -72,6 +73,11 @@ public class ModuleManagerImpl implements ModuleManager {
             if (ServerImpl.DEBUG) Logger.error("Module with name " + moduleInfo.name() + " is already enabled");
             return;
         }
+        moduleLoadOptions.put(module, moduleInfo.loadOption());
+        if (moduleInfo.loadOption() == LoadOption.POSTWORLD) {
+            toLoadPostWorld.add(module);
+            return;
+        }
         Logger.info("Enabling module " + moduleInfo.name() + " v" + moduleInfo.version() + " by " + String.join(", ", moduleInfo.authors()));
         for (ModuleDependency moduleDependency : moduleInfo.moduleDependencies()) {
             if (!moduleInfos.containsKey(moduleDependency.name())) {
@@ -81,12 +87,7 @@ public class ModuleManagerImpl implements ModuleManager {
         }
         modules.put(moduleInfo.name(), module);
         moduleInfos.put(moduleInfo.name(), moduleInfo);
-        moduleLoadOptions.put(module, moduleInfo.loadOption());
-        if (moduleInfo.loadOption() == LoadOption.POSTWORLD) {
-            module.onEnable();
-            return;
-        }
-
+        module.onEnable();
     }
 
     @Override

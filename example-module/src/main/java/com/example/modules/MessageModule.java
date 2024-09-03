@@ -15,9 +15,7 @@ import java.util.logging.Logger;
         description = "A module that displays a message on the screen",
         authors = {"Your Name"},
         moduleDependencies = {
-                @ModuleDependency(
-                        name = "TestModule"
-                )
+                //No dependencies, but you can add them here
         }
 )
 public class MessageModule extends Module {

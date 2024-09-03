@@ -15,6 +15,9 @@ dependencies {
     // Add the server-api module as a dependency
     compileOnly project(':server-api')
 
+    // Reflections for scanning classes
+    implementation "org.reflections:reflections:0.10.2"
+
     // Annotations and Lombok (for cleaner code)
     implementation "org.jetbrains:annotations:${annotationsVersion}"
     compileOnly "org.projectlombok:lombok:${lombokVersion}"

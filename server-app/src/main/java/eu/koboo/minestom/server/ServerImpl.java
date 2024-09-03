@@ -74,7 +74,10 @@ public class ServerImpl extends Server {
         Logger.info("Initializing server..");
         worldManager = new WorldManagerImpl();
         moduleManager = new ModuleManagerImpl();
+
         MinecraftServer minecraftServer = MinecraftServer.init();
+
+        moduleManager.enableAllModules();
 
         MinecraftServer.getExceptionManager()
                 .setExceptionHandler(exc -> Logger.error("An unexpected error occurred! ", exc));

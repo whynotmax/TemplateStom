@@ -15,6 +15,10 @@ dependencies {
     implementation "org.jetbrains:annotations:${annotationsVersion}"
     implementation "me.carleslc.Simple-YAML:Simple-Yaml:${yamlVersion}"
 
+    // Tinylog for logging
+    implementation "org.tinylog:slf4j-tinylog:${tinylogVersion}"
+    implementation "org.tinylog:tinylog-impl:${tinylogVersion}"
+
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 }

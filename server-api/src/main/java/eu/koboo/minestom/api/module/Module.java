@@ -4,11 +4,15 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.tinylog.Logger;
+import org.tinylog.TaggedLogger;
 
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PUBLIC)
 public abstract class Module {
+
+    TaggedLogger logger = Logger.tag("Module");
 
     private boolean isEnabled = false;
 
