@@ -1,5 +1,7 @@
 package com.example.modules.util;
 
+import net.minestom.server.event.Event;
+
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.function.Consumer;
