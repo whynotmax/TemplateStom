@@ -38,6 +38,23 @@ public class ModuleManagerImpl implements ModuleManager {
         this.moduleInfos = new HashMap<>();
         this.moduleLoadOptions = new HashMap<>();
         this.toLoadPostWorld = new ArrayList<>();
+
+        Path moduleFolder = Path.of("modules");
+        if (!moduleFolder.toFile().exists()) {
+            if (ServerImpl.DEBUG) Logger.info("Creating modules folder as it does not exist");
+            moduleFolder.toFile().mkdir();
+            if (ServerImpl.DEBUG) Logger.info("Modules folder created");
+        }
+        File moduleFolderAsFile = moduleFolder.toFile();
+        if (moduleFolderAsFile.listFiles() == null) {
+            if (ServerImpl.DEBUG) Logger.error("No modules found; maybe you should create some? :)");
+            return;
+        }
+        int filesInModuleFolder = moduleFolderAsFile.listFiles().length;
+        if (filesInModuleFolder == 0) {
+            if (ServerImpl.DEBUG) Logger.error("No modules found; maybe you should create some? :)");
+        }
+        Logger.info("Found " + filesInModuleFolder + " module(s). Thank you for choosing us!");
     }
 
     @Override
