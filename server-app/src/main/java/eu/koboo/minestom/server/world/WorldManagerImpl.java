@@ -1,5 +1,7 @@
 package eu.koboo.minestom.server.world;
 
+import eu.koboo.minestom.api.module.Module;
+import eu.koboo.minestom.api.module.annotation.dependencies.LoadOption;
 import eu.koboo.minestom.api.world.World;
 import eu.koboo.minestom.api.world.dimension.Dimension;
 import eu.koboo.minestom.api.world.manager.WorldManager;
@@ -128,6 +130,7 @@ public class WorldManagerImpl implements WorldManager {
                 .forEach(this::loadWorld);
         double timeInMillis = (System.nanoTime() - startTime) / 1_000_000.0;
         Logger.info("All available worlds loaded in " + String.format("%.2fms", timeInMillis));
+        ServerImpl.getInstance().getModuleManager().loadModulesPostWorld();
     }
 
     @Override

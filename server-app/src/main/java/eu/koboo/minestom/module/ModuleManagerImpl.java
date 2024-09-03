@@ -6,28 +6,38 @@ import eu.koboo.minestom.api.module.annotation.ModuleInfo;
 import eu.koboo.minestom.api.module.annotation.dependencies.LoadOption;
 import eu.koboo.minestom.api.module.annotation.dependencies.ModuleDependency;
 import eu.koboo.minestom.server.ServerImpl;
+import lombok.Getter;
+import net.minestom.server.MinecraftServer;
+import net.minestom.server.event.Event;
 import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.jar.JarFile;
 
+@Getter
 public class ModuleManagerImpl implements ModuleManager {
 
     Map<String, Module> modules;
     Map<String, ModuleInfo> moduleInfos;
 
     Map<Module, LoadOption> moduleLoadOptions;
+    List<Module> toLoadPostWorld;
 
     public ModuleManagerImpl() {
         this.modules = new HashMap<>();
         this.moduleInfos = new HashMap<>();
         this.moduleLoadOptions = new HashMap<>();
+        this.toLoadPostWorld = new ArrayList<>();
     }
 
     @Override
@@ -59,7 +69,7 @@ public class ModuleManagerImpl implements ModuleManager {
             module.onEnable();
             return;
         }
-        //Load module after worlds are loaded
+
     }
 
     @Override
@@ -94,8 +104,32 @@ public class ModuleManagerImpl implements ModuleManager {
 
     @Override
     public void enableAllModules() {
-        //TODO: Check module folder and load all modules
-        //      Have fun with reflection and class loading! <3
+        List<JarFile> moduleJars = getModuleJars();
+        for (JarFile jarFile : moduleJars) {
+            try (URLClassLoader classLoader = new URLClassLoader(new URL[]{new File(jarFile.getName()).toURI().toURL()})) {
+                jarFile.stream()
+                        .filter(entry -> entry.getName().endsWith(".class"))
+                        .forEach(entry -> {
+                            String className = entry.getName().replace("/", ".").replace(".class", "");
+                            try {
+                                Class<?> clazz = classLoader.loadClass(className);
+                                if (Module.class.isAssignableFrom(clazz)) {
+                                    Module module = (Module) clazz.getDeclaredConstructor().newInstance();
+                                    enableModule(module);
+                                }
+                            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException |
+                                     InvocationTargetException e) {
+                                Logger.error("Failed to load module class " + className, e);
+                            }
+                        });
+            } catch (IOException e) {
+                Logger.error("Failed to load module jar " + jarFile.getName(), e);
+                e.printStackTrace();
+            } catch (Exception e) {
+                Logger.error("Malformed JAR file: " + jarFile.getName(), e);
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -130,16 +164,31 @@ public class ModuleManagerImpl implements ModuleManager {
         return modules.containsKey(name) && modules.get(name) != null && modules.get(name).isEnabled();
     }
 
+    @Override
     public LoadOption getModuleLoadOption(Module module) {
         return moduleLoadOptions.getOrDefault(module, LoadOption.PREWORLD);
     }
 
+    @Override
     public Map<String, LoadOption> getModuleLoadOptions() {
         Map<String, LoadOption> moduleLoadOptions = new HashMap<>();
         for (Map.Entry<Module, LoadOption> entry : this.moduleLoadOptions.entrySet()) {
             moduleLoadOptions.put(entry.getKey().getClass().getAnnotation(ModuleInfo.class).name(), entry.getValue());
         }
         return moduleLoadOptions;
+    }
+
+    @Override
+    public <E extends Event> void registerListener(Class<E> eventClass, Consumer<E> listener) {
+        MinecraftServer.getGlobalEventHandler().addListener(eventClass, listener); //Hopefully this works, lmfaooo
+    }
+
+    @Override
+    public void loadModulesPostWorld() {
+        Logger.info("Loading modules that are set to load post-world. (" + toLoadPostWorld.size() + ")");
+        for (Module module : toLoadPostWorld) {
+            enableModule(module);
+        }
     }
 
     private List<JarFile> getModuleJars() {
@@ -182,5 +231,9 @@ public class ModuleManagerImpl implements ModuleManager {
             }
         }
         return jarFiles;
+    }
+
+    public List<Module> getModulesToLoadPostWorld() {
+        return toLoadPostWorld;
     }
 }

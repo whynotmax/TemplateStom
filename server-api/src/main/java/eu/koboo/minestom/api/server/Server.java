@@ -1,6 +1,7 @@
 package eu.koboo.minestom.api.server;
 
 import eu.koboo.minestom.api.config.ServerConfig;
+import eu.koboo.minestom.api.module.ModuleManager;
 import eu.koboo.minestom.api.world.World;
 import eu.koboo.minestom.api.world.manager.WorldManager;
 import lombok.Getter;
@@ -67,5 +68,12 @@ public abstract class Server {
      */
     @NonNull
     public abstract World getDefaulWorld();
+
+    /**
+     * Get the module manager instance
+     * @return The module manager instance
+     */
+    @NonNull
+    public abstract ModuleManager getModuleManager();
 
 }
