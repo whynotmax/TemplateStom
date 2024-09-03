@@ -3,7 +3,6 @@ package com.example.modules;
 import com.example.modules.listener.MessageListener;
 import eu.koboo.minestom.api.module.Module;
 import eu.koboo.minestom.api.module.annotation.ModuleInfo;
-import eu.koboo.minestom.api.module.annotation.dependencies.ModuleDependency;
 import eu.koboo.minestom.api.server.Server;
 import net.minestom.server.event.player.PlayerSpawnEvent;
 
